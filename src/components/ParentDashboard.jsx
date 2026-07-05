@@ -15,7 +15,10 @@ function fmtTime(sec) {
 }
 
 export default function ParentDashboard({ onBack }) {
-  const { profiles, hasParentPin, setParentPin, verifyPin } = useApp()
+  const {
+    profiles, hasParentPin, setParentPin, verifyPin,
+    resetPoints, resetQuestions, resetProgress,
+  } = useApp()
   const [unlocked, setUnlocked] = useState(!hasParentPin())
   const [pin, setPin] = useState('')
   const [newPin, setNewPin] = useState('')
@@ -100,6 +103,37 @@ export default function ParentDashboard({ onBack }) {
                 </ul>
               </div>
             )}
+
+            <div className="testing-tools">
+              <span className="k">Testing tools</span>
+              <div className="tool-btns">
+                <button
+                  className="btn ghost sm"
+                  onClick={() => {
+                    if (confirm(`Reset ALL points for ${p.name}? (Lifetime + spendable back to 0.)`)) resetPoints(p.key)
+                  }}
+                >
+                  ↺ Reset points
+                </button>
+                <button
+                  className="btn ghost sm"
+                  onClick={() => {
+                    if (confirm(`Reset questions for ${p.name}? All questions come back and difficulty restarts.`)) resetQuestions(p.key)
+                  }}
+                >
+                  ↺ Reset questions
+                </button>
+                <button
+                  className="btn danger sm"
+                  onClick={() => {
+                    if (confirm(`FULL reset for ${p.name}? Wipes points, time, days, tests and history. This cannot be undone.`)) resetProgress(p.key)
+                  }}
+                >
+                  ⚠︎ Full reset
+                </button>
+              </div>
+              <p className="muted tiny">Handy while testing. “Reset questions” clears the recently-seen list so the same questions can appear again.</p>
+            </div>
           </div>
         )
       })}

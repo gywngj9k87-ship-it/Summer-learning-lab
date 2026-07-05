@@ -4,11 +4,13 @@ import { generalKnowledge } from './generalKnowledge.js'
 import { mun } from './mun.js'
 import { reading } from './reading.js'
 import { crosswords } from './crosswords.js'
+import { vocabulary } from './vocabulary.js'
 
 // Master registry of learning topics. `kind` tells the ActivityRunner which
-// component to render. Quiz/reading/crossword topics carry their data bank.
+// component to render. Quiz/reading/crossword/vocab topics carry their data.
 export const TOPICS = [
   { id: 'reading', label: 'Reading', emoji: '📖', kind: 'reading', bank: reading },
+  { id: 'vocabulary', label: 'Vocabulary', emoji: '🗣️', kind: 'vocab', bank: vocabulary },
   { id: 'sudoku', label: 'Sudoku', emoji: '🔢', kind: 'sudoku' },
   { id: 'wordle', label: 'Word Guess', emoji: '🔤', kind: 'wordle' },
   { id: 'crossword', label: 'Crossword', emoji: '🧩', kind: 'crossword', bank: crosswords },

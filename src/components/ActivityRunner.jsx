@@ -11,6 +11,7 @@ import QuizActivity from './QuizActivity.jsx'
 import SudokuActivity from './SudokuActivity.jsx'
 import WordleActivity from './WordleActivity.jsx'
 import CrosswordActivity from './CrosswordActivity.jsx'
+import VocabularyActivity from './VocabularyActivity.jsx'
 
 export default function ActivityRunner({ topicId, onDone }) {
   const { profile, kid, dayNumber, completeActivity, markSeen, recentSeen } = useApp()
@@ -30,6 +31,13 @@ export default function ActivityRunner({ topicId, onDone }) {
         const bank = topic.bank[ageLevel] || []
         const items = selectQuizItems(bank, level, seed, quizCount(level), recentSeen(topicId))
         return { content: { items }, servedIds: items.map((i) => i.id) }
+      }
+      case 'vocab': {
+        const bank = topic.bank[ageLevel] || []
+        // Fewer items than a plain quiz since each word has two parts.
+        const count = Math.min(4, quizCount(level))
+        const words = selectQuizItems(bank, level, seed, count, recentSeen(topicId))
+        return { content: { words }, servedIds: words.map((wd) => wd.id) }
       }
       case 'reading': {
         const bank = topic.bank[ageLevel] || []
@@ -103,6 +111,8 @@ export default function ActivityRunner({ topicId, onDone }) {
   switch (topic.kind) {
     case 'quiz':
       return <QuizActivity {...common} subtitle={subtitle} questions={content.items} />
+    case 'vocab':
+      return <VocabularyActivity {...common} words={content.words} />
     case 'reading':
       return (
         <QuizActivity

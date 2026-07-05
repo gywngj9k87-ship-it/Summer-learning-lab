@@ -17,6 +17,7 @@ with optional **cross-device sync** when deployed to Netlify.
 - 🔤 **Word Guess** (Wordle-style) — short words for the little one, 5-letter for the older
 - 🧩 **Crossword** — mini interlocking puzzles with clues
 - 📖 **Reading comprehension** — a passage plus questions
+- 🗣️ **Vocabulary** — learn a word's meaning, then use it in a sentence of your own
 - 🌍 **Geography**, 🏛️ **History**, 💡 **General Knowledge** (sports, nations…)
 - 🕊️ **Model UN prep** (Niall only) — country facts + world affairs
 
@@ -36,7 +37,9 @@ with optional **cross-device sync** when deployed to Netlify.
   calendar day used). On real **Fridays**, a mixed **test** unlocks for bonus
   points. There's also a **1-hour-a-day** learning-time goal, tracked live.
 - **Parent area:** see each child's points, PS5 earned/redeemed, days active,
-  total learning time, per-topic difficulty, and recent test scores.
+  total learning time, per-topic difficulty, and recent test scores. Includes
+  **testing tools** to reset points, reset the question history (so questions
+  reappear), or fully reset a child's progress.
 
 **How the kids can answer**
 - **Tap / select** — big buttons for every multiple-choice question.
@@ -103,6 +106,7 @@ array and they're picked up automatically:
 - `geography.js`, `history.js`, `generalKnowledge.js`, `mun.js` — quiz banks
   (`junior` / `senior`), ordered roughly easy → hard.
 - `reading.js` — passages + questions.
+- `vocabulary.js` — words with a meaning, choices, and a model example sentence.
 - `crosswords.js` — mini crossword puzzles.
 - Word lists for Word Guess are in `src/lib/words.js`.
 

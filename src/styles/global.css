@@ -185,6 +185,18 @@ body {
 .big-score { font-size: 2.6rem; font-weight: 800; margin: 6px 0; }
 .answered-count { margin-top: 10px; }
 
+/* ---- Vocabulary ---- */
+.vocab-word-card {
+  text-align: center; background: linear-gradient(135deg, #ede9fe, #dbeafe);
+  border-radius: 16px; padding: 18px; margin-bottom: 16px;
+}
+.vocab-word { font-size: 2.2rem; font-weight: 800; color: #4338ca; letter-spacing: 0.01em; }
+.sentence-input {
+  width: 100%; font: inherit; font-size: 1.1rem; padding: 14px; border: 2px solid var(--line);
+  border-radius: 14px; resize: vertical; min-height: 90px; line-height: 1.5;
+}
+.sentence-input:focus { outline: 3px solid #ddd6fe; border-color: #7c3aed; }
+
 /* ---- Sudoku ---- */
 .sudoku-wrap { display: flex; justify-content: center; }
 .sudoku { display: grid; gap: 0; border: 3px solid var(--ink); border-radius: 8px; overflow: hidden; width: min(420px, 92vw); aspect-ratio: 1; }
@@ -276,6 +288,11 @@ body {
 .level-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .chip { background: #eef2f7; border-radius: 999px; padding: 4px 10px; font-size: 0.82rem; }
 .tests ul { margin: 6px 0 0; padding-left: 18px; }
+.testing-tools { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.tool-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.btn.danger { background: var(--bad-bg); color: var(--bad); }
+.btn.danger:hover { filter: brightness(0.97); }
+.tiny { font-size: 0.78rem; margin-top: 8px; }
 
 @media (max-width: 560px) {
   .stats { grid-template-columns: 1fr; }

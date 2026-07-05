@@ -196,6 +196,32 @@ export function AppProvider({ children }) {
     commitProfile(updated)
   }
 
+  // --- Parent testing/reset tools (operate on any kid by key) --------------
+
+  function updateByKey(key, updater) {
+    setProfiles((prev) => {
+      const p = prev[key]
+      if (!p) return prev
+      const updated = updater(p)
+      persistProfile(updated)
+      return { ...prev, [key]: updated }
+    })
+  }
+  // Zero out points and clear redemption history.
+  function resetPoints(key) {
+    updateByKey(key, (p) => ({ ...p, lifetimePoints: 0, spendablePoints: 0, redemptions: [] }))
+  }
+  // Bring back the question bank: clear the recently-seen history and reset
+  // adaptive levels and today's completed markers.
+  function resetQuestions(key) {
+    updateByKey(key, (p) => ({ ...p, seen: {}, levels: {}, completedByDate: {} }))
+  }
+  // Full wipe back to a blank profile (keeps the kid's identity + start date).
+  function resetProgress(key) {
+    const kidInfo = getKid(key)
+    updateByKey(key, (p) => ({ ...blankProfile(kidInfo, p.createdDate), levels: {}, seen: {} }))
+  }
+
   // Parent PIN management. First time, the parent sets it.
   function setParentPin(pin) {
     const next = { ...settings, parentPin: String(pin) }
@@ -244,6 +270,9 @@ export function AppProvider({ children }) {
     recordTest,
     markSeen,
     recentSeen,
+    resetPoints,
+    resetQuestions,
+    resetProgress,
     setParentPin,
     hasParentPin,
     verifyPin,

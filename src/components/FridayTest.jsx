@@ -17,7 +17,7 @@ export default function FridayTest({ onDone }) {
   // Build once on mount (excluding recently-seen questions), and remember which
   // ids were served per topic so we can mark them seen.
   const [{ questions, servedByTopic }] = useState(() => {
-    const topicIds = ['geography', 'history', 'generalKnowledge']
+    const topicIds = ['geography', 'history', 'generalKnowledge', 'vocabulary']
     if (kid.hasMUN) topicIds.push('mun')
     const pool = []
     const served = {}
@@ -26,7 +26,11 @@ export default function FridayTest({ onDone }) {
       const lvl = getLevel(profile, tid)
       const picked = selectQuizItems(bank, lvl, seedFrom('friday', tid, dayNumber), 3, recentSeen(tid))
       served[tid] = picked.map((q) => q.id)
-      pool.push(...picked)
+      // Vocabulary items store the target word, not a question stem — add one.
+      const shaped = tid === 'vocabulary'
+        ? picked.map((item) => ({ ...item, q: `What does “${item.word}” mean?` }))
+        : picked
+      pool.push(...shaped)
     }
     // Shuffle and cap at 10.
     let s = seedFrom('friday-test', kid.key, dayNumber)
