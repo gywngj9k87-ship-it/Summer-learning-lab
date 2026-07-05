@@ -56,16 +56,42 @@ export function quizCount(level) {
 // Pick quiz items appropriate to the level. Banks are ordered roughly
 // easy -> hard, so a higher level draws from a harder band. `seed` rotates the
 // selection day to day so kids see fresh questions ("learn new things").
-export function selectQuizItems(bank, level, seed, desiredCount) {
+//
+// `excludeIds` are items served recently (see the "recently seen" guard): they
+// are dropped so nothing repeats within a week. If excluding leaves too few to
+// fill the request, we relax the exclusion (graceful fallback) rather than
+// return an empty session.
+export function selectQuizItems(bank, level, seed, desiredCount, excludeIds = []) {
   const n = bank.length
   if (n === 0) return []
   const count = Math.min(desiredCount ?? quizCount(level), n)
   const f = (clamp(level, 1, 5) - 1) / 4
-  const bandWidth = Math.min(n, count + 3)
-  const maxStart = n - bandWidth
-  const start = Math.round(maxStart * f)
-  const band = bank.slice(start, start + bandWidth)
-  return seededShuffle(band, seed).slice(0, count)
+  const target = f * (n - 1)
+
+  // Rank every item by how close its position is to the level's target
+  // difficulty (nearest first), keeping ids so we can filter.
+  const ranked = bank
+    .map((item, i) => ({ item, dist: Math.abs(i - target) }))
+    .sort((a, b) => a.dist - b.dist)
+
+  const exclude = new Set(excludeIds)
+  const fresh = ranked.filter((r) => !exclude.has(r.item.id))
+  // Use fresh items if there are enough; otherwise fall back to the full list.
+  const source = fresh.length >= count ? fresh : ranked
+
+  // Take a candidate window near the target difficulty a bit larger than the
+  // count, then shuffle by the day seed so selections vary day to day.
+  const windowSize = Math.min(source.length, Math.max(count + 4, Math.ceil(count * 1.8)))
+  const window = source.slice(0, windowSize).map((r) => r.item)
+  return seededShuffle(window, seed).slice(0, count)
+}
+
+// Generic "pick one fresh item" for reading passages / crosswords, honouring
+// difficulty order (easy -> hard) and the recently-seen exclusion.
+export function pickFreshItem(list, level, seed, excludeIds = []) {
+  if (!list || list.length === 0) return null
+  const items = selectQuizItems(list, level, seed, 1, excludeIds)
+  return items[0] || list[0]
 }
 
 // Sudoku clue counts by level and age band (fewer clues = harder).

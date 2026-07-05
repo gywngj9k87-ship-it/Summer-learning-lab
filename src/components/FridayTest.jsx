@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApp } from '../context/AppContext.jsx'
 import { getTopic, seedFrom } from '../data/topics.js'
 import { getLevel, selectQuizItems } from '../lib/adaptive.js'
@@ -8,19 +8,25 @@ const LETTERS = ['A', 'B', 'C', 'D']
 
 // Friday test: a mixed quiz across the week's topics. Unlike practice, answers
 // aren't revealed until the end — then it shows the score and awards bonus
-// points. Difficulty of each topic's questions follows that topic's level.
+// points. Difficulty of each topic's questions follows that topic's level, and
+// the recently-seen guard keeps the test from reusing the week's questions.
 export default function FridayTest({ onDone }) {
-  const { profile, kid, dayNumber, recordTest } = useApp()
+  const { profile, kid, dayNumber, recordTest, markSeen, recentSeen } = useApp()
   const ageLevel = kid.level
 
-  const questions = useMemo(() => {
+  // Build once on mount (excluding recently-seen questions), and remember which
+  // ids were served per topic so we can mark them seen.
+  const [{ questions, servedByTopic }] = useState(() => {
     const topicIds = ['geography', 'history', 'generalKnowledge']
     if (kid.hasMUN) topicIds.push('mun')
     const pool = []
+    const served = {}
     for (const tid of topicIds) {
       const bank = getTopic(tid).bank[ageLevel] || []
       const lvl = getLevel(profile, tid)
-      pool.push(...selectQuizItems(bank, lvl, seedFrom('friday', tid, dayNumber), 3))
+      const picked = selectQuizItems(bank, lvl, seedFrom('friday', tid, dayNumber), 3, recentSeen(tid))
+      served[tid] = picked.map((q) => q.id)
+      pool.push(...picked)
     }
     // Shuffle and cap at 10.
     let s = seedFrom('friday-test', kid.key, dayNumber)
@@ -35,8 +41,13 @@ export default function FridayTest({ onDone }) {
       const j = Math.floor(rand() * (i + 1))
       ;[a[i], a[j]] = [a[j], a[i]]
     }
-    return a.slice(0, 10)
-  }, [profile, kid, dayNumber, ageLevel])
+    return { questions: a.slice(0, 10), servedByTopic: served }
+  })
+
+  useEffect(() => {
+    for (const [tid, ids] of Object.entries(servedByTopic)) markSeen(tid, ids)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState({})

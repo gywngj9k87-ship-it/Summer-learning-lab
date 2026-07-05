@@ -3,7 +3,7 @@ import React, {
 } from 'react'
 import { matchKid, getKid } from '../lib/profiles.js'
 import { loadAll, persistProfile, persistSettings, blankProfile } from '../lib/store.js'
-import { todayKey, dayNumberFor } from '../lib/days.js'
+import { todayKey, dayNumberFor, daysAgoKey } from '../lib/days.js'
 import { getLevel, nextLevel } from '../lib/adaptive.js'
 
 const Ctx = createContext(null)
@@ -161,6 +161,28 @@ export function AppProvider({ children }) {
     return { pointsAwarded: points, levelChange: change, newLevel: next }
   }
 
+  // --- "Recently seen" guard: no repeats within a week -----------------------
+
+  // Item ids served for a topic within the last `days` calendar days.
+  function recentSeen(topicId, days = 7) {
+    const cutoff = daysAgoKey(days)
+    return (profile?.seen?.[topicId] || [])
+      .filter((e) => e.date > cutoff)
+      .map((e) => e.id)
+  }
+
+  // Mark ids as served today for a topic. Old entries (>14 days) are pruned so
+  // the pool re-opens over time and storage stays small.
+  function markSeen(topicId, ids) {
+    if (!profile || !ids || ids.length === 0) return
+    const today = todayKey()
+    const cutoff = daysAgoKey(14)
+    const seen = { ...(profile.seen || {}) }
+    const list = [...(seen[topicId] || []), ...ids.map((id) => ({ id, date: today }))]
+    seen[topicId] = list.filter((e) => e.date >= cutoff).slice(-300)
+    commitProfile({ ...profile, seen })
+  }
+
   // Record a Friday test result.
   function recordTest({ score, total, points }) {
     if (!profile) return
@@ -220,6 +242,8 @@ export function AppProvider({ children }) {
     logout,
     completeActivity,
     recordTest,
+    markSeen,
+    recentSeen,
     setParentPin,
     hasParentPin,
     verifyPin,

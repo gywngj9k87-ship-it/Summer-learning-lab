@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApp } from '../context/AppContext.jsx'
 import { getTopic, seedFrom } from '../data/topics.js'
 import {
-  getLevel, levelLabel, selectQuizItems, quizCount,
+  getLevel, levelLabel, selectQuizItems, quizCount, pickFreshItem,
   sudokuClues, wordleSettings, crosswordReveals,
 } from '../lib/adaptive.js'
 import { generateSudoku } from '../lib/sudoku.js'
@@ -13,42 +13,55 @@ import WordleActivity from './WordleActivity.jsx'
 import CrosswordActivity from './CrosswordActivity.jsx'
 
 export default function ActivityRunner({ topicId, onDone }) {
-  const { profile, kid, dayNumber, completeActivity } = useApp()
+  const { profile, kid, dayNumber, completeActivity, markSeen, recentSeen } = useApp()
   const topic = getTopic(topicId)
   const ageLevel = kid.level // 'junior' | 'senior'
   const level = getLevel(profile, topicId)
   const seed = seedFrom(kid.key, dayNumber, topicId, level)
   const [result, setResult] = useState(null)
 
-  const content = useMemo(() => {
-    if (!topic) return null
+  // Build the activity ONCE on mount. Excludes items seen in the last week so
+  // nothing repeats. Kept in state (not useMemo) so a mid-activity re-render
+  // from markSeen doesn't regenerate the questions under the child's feet.
+  const [built] = useState(() => {
+    if (!topic) return { content: null, servedIds: [] }
     switch (topic.kind) {
       case 'quiz': {
         const bank = topic.bank[ageLevel] || []
-        return { items: selectQuizItems(bank, level, seed, quizCount(level)) }
+        const items = selectQuizItems(bank, level, seed, quizCount(level), recentSeen(topicId))
+        return { content: { items }, servedIds: items.map((i) => i.id) }
       }
       case 'reading': {
         const bank = topic.bank[ageLevel] || []
-        const f = (level - 1) / 4
-        const base = Math.round((bank.length - 1) * f)
-        const idx = bank.length ? (base + dayNumber) % bank.length : 0
-        return { passage: bank[idx] }
+        const passage = pickFreshItem(bank, level, seed, recentSeen(topicId))
+        return { content: { passage }, servedIds: passage ? [passage.id] : [] }
       }
       case 'sudoku': {
         const n = ageLevel === 'junior' ? 4 : 9
-        return { game: generateSudoku(n, sudokuClues(level, ageLevel), seed) }
+        return { content: { game: generateSudoku(n, sudokuClues(level, ageLevel), seed) }, servedIds: [] }
       }
       case 'wordle':
-        return { word: pickWord(ageLevel, seed + level), settings: wordleSettings(level, ageLevel) }
+        return {
+          content: { word: pickWord(ageLevel, seed + level), settings: wordleSettings(level, ageLevel) },
+          servedIds: [],
+        }
       case 'crossword': {
         const bank = topic.bank[ageLevel] || []
-        const puzzle = bank[(seed + dayNumber) % bank.length]
-        return { puzzle, maxReveals: crosswordReveals(level) }
+        const puzzle = pickFreshItem(bank, level, seed, recentSeen(topicId))
+        return { content: { puzzle, maxReveals: crosswordReveals(level) }, servedIds: puzzle ? [puzzle.id] : [] }
       }
       default:
-        return null
+        return { content: null, servedIds: [] }
     }
-  }, [topic, ageLevel, level, seed, dayNumber])
+  })
+
+  // Record served items as "seen today" so they won't reappear within a week.
+  useEffect(() => {
+    if (built.servedIds.length) markSeen(topicId, built.servedIds)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const content = built.content
 
   function handleComplete({ correct, total, points }) {
     const r = completeActivity({ topicId, correct, total, points })

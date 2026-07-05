@@ -26,6 +26,14 @@ export function dayNumberFor(activeDates, today = todayKey()) {
   return set.size + 1
 }
 
+// The calendar date key `n` days before `from` (default today), as YYYY-MM-DD.
+// Used by the "recently seen" guard to find the cutoff for a rolling window.
+export function daysAgoKey(n, from = new Date()) {
+  const d = new Date(from)
+  d.setDate(d.getDate() - n)
+  return todayKey(d)
+}
+
 export function friendlyDate(key) {
   const [y, m, d] = key.split('-').map(Number)
   const dt = new Date(y, m - 1, d)

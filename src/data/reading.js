@@ -47,6 +47,52 @@ export const reading = {
         { q: 'How did the waves feel on her feet?', choices: ['Hot', 'Cool', 'Dry', 'Sticky'], answer: 1 },
       ],
     },
+    {
+      id: 'read-j5',
+      title: 'The Busy Ant',
+      passage:
+        'A little ant found a big crumb of bread. It was too heavy to carry alone. So the ant called her friends. Together, all the ants carried the crumb back to their nest under the ground.',
+      questions: [
+        { q: 'What did the ant find?', choices: ['A crumb of bread', 'A leaf', 'A stone', 'A worm'], answer: 0 },
+        { q: 'Why did the ant call her friends?', choices: ['To play', 'The crumb was too heavy alone', 'To sleep', 'To sing'], answer: 1 },
+        { q: 'Where did the ants take the crumb?', choices: ['To their nest', 'To a tree', 'To the river', 'To a house'], answer: 0 },
+      ],
+    },
+    {
+      id: 'read-j6',
+      title: 'Ben’s New Bike',
+      passage:
+        'Ben got a shiny blue bike for his birthday. At first he was a little scared. His dad held the bike as Ben pushed the pedals. After a few tries, Ben could ride all by himself. He felt very proud.',
+      questions: [
+        { q: 'What colour was Ben’s bike?', choices: ['Red', 'Blue', 'Green', 'Black'], answer: 1 },
+        { q: 'How did Ben feel at first?', choices: ['A little scared', 'Angry', 'Sleepy', 'Hungry'], answer: 0 },
+        { q: 'Who helped Ben?', choices: ['His dad', 'His teacher', 'His dog', 'His friend'], answer: 0 },
+        { q: 'How did Ben feel at the end?', choices: ['Proud', 'Sad', 'Bored', 'Cross'], answer: 0 },
+      ],
+    },
+    {
+      id: 'read-j7',
+      title: 'The Moon at Night',
+      passage:
+        'When the sun goes down, the sky gets dark. The moon comes out and gives a soft light. Sometimes the moon looks round like a ball, and sometimes it looks like a thin banana. Stars twinkle around it.',
+      questions: [
+        { q: 'When does the moon come out?', choices: ['When the sun goes down', 'At lunchtime', 'In the morning', 'During rain'], answer: 0 },
+        { q: 'What can the moon look like sometimes?', choices: ['A thin banana', 'A square', 'A car', 'A tree'], answer: 0 },
+        { q: 'What twinkles around the moon?', choices: ['Stars', 'Fish', 'Leaves', 'Cars'], answer: 0 },
+      ],
+    },
+    {
+      id: 'read-j8',
+      title: 'Lily Helps Out',
+      passage:
+        'Lily saw that the kitchen was messy. Toys were on the floor and cups were on the table. Without being asked, Lily put the toys in the box and the cups in the sink. When her mom came in, she gave Lily a big hug and said thank you.',
+      questions: [
+        { q: 'What was messy?', choices: ['The kitchen', 'The garden', 'The car', 'The park'], answer: 0 },
+        { q: 'Where did Lily put the toys?', choices: ['In the box', 'On the table', 'In the sink', 'Outside'], answer: 0 },
+        { q: 'Did someone ask Lily to help?', choices: ['No, she chose to', 'Yes, her mom', 'Yes, her dad', 'Yes, her friend'], answer: 0 },
+        { q: 'How did her mom react?', choices: ['Gave her a hug', 'Was angry', 'Said nothing', 'Went away'], answer: 0 },
+      ],
+    },
   ],
   senior: [
     {
@@ -95,6 +141,54 @@ export const reading = {
         { q: 'What did the legendary messenger announce?', choices: ['A festival', 'A victory in battle', 'A new king', 'A storm'], answer: 1 },
         { q: 'How long is a modern marathon?', choices: ['10 km', '21.1 km', '42.2 km', '100 km'], answer: 2 },
         { q: 'What does marathon training require, according to the passage?', choices: ['Only speed', 'Months of practice and discipline', 'Special shoes only', 'A team'], answer: 1 },
+      ],
+    },
+    {
+      id: 'read-s5',
+      title: 'The Water Cycle',
+      passage:
+        'Water is always on the move. The sun heats lakes, rivers, and oceans, turning liquid water into an invisible gas called water vapour, which rises into the air. High up, the vapour cools and gathers into clouds. When the clouds become heavy, the water falls back to Earth as rain, snow, or hail. This never-ending journey is known as the water cycle, and it keeps fresh water flowing around the planet.',
+      questions: [
+        { q: 'What turns liquid water into vapour?', choices: ['The moon', 'The sun’s heat', 'The wind', 'The soil'], answer: 1 },
+        { q: 'What do clouds form from?', choices: ['Dust', 'Cooled water vapour', 'Smoke', 'Sand'], answer: 1 },
+        { q: 'Water can fall from clouds as rain, snow, or…', choices: ['Fog', 'Hail', 'Steam', 'Dew'], answer: 1 },
+        { q: 'What is this whole journey called?', choices: ['The food chain', 'The water cycle', 'Gravity', 'Erosion'], answer: 1 },
+      ],
+    },
+    {
+      id: 'read-s6',
+      title: 'The First Flight',
+      passage:
+        'For centuries, people dreamed of flying like birds. In 1903, two American brothers named Orville and Wilbur Wright finally made that dream real. On a windy beach in North Carolina, their small wood-and-cloth airplane lifted off the ground and flew for twelve seconds. It was a short flight, but it changed the world. Within a few decades, airplanes were carrying people across oceans.',
+      questions: [
+        { q: 'In what year did the Wright brothers fly?', choices: ['1893', '1903', '1920', '1945'], answer: 1 },
+        { q: 'What were the brothers’ first names?', choices: ['Orville and Wilbur', 'Neil and Buzz', 'John and James', 'Tom and Sam'], answer: 0 },
+        { q: 'How long did the first flight last?', choices: ['Twelve seconds', 'Twelve minutes', 'One hour', 'A whole day'], answer: 0 },
+        { q: 'What was the airplane made of?', choices: ['Steel and glass', 'Wood and cloth', 'Plastic', 'Stone'], answer: 1 },
+      ],
+    },
+    {
+      id: 'read-s7',
+      title: 'Coral Reefs',
+      passage:
+        'Coral reefs are sometimes called the rainforests of the sea because so many creatures depend on them. Although a coral looks like a colourful rock or plant, it is actually made of thousands of tiny animals living together. Reefs provide food and shelter for fish, turtles, and countless other sea creatures. Sadly, warmer oceans and pollution can harm reefs, causing them to lose their colour in a process called bleaching.',
+      questions: [
+        { q: 'Why are coral reefs called the rainforests of the sea?', choices: ['They are green', 'So many creatures depend on them', 'They are tall', 'They float'], answer: 1 },
+        { q: 'What is coral actually made of?', choices: ['Rock', 'Plants', 'Thousands of tiny animals', 'Sand'], answer: 2 },
+        { q: 'What do reefs provide for sea creatures?', choices: ['Food and shelter', 'Air', 'Sunlight', 'Freshwater'], answer: 0 },
+        { q: 'What is it called when reefs lose their colour?', choices: ['Fading', 'Bleaching', 'Melting', 'Drying'], answer: 1 },
+      ],
+    },
+    {
+      id: 'read-s8',
+      title: 'A Delegate’s Job',
+      passage:
+        'At a Model United Nations conference, each student plays the role of a delegate representing a country — even one that is not their own. A good delegate researches their country’s history, needs, and opinions, then speaks and negotiates on its behalf. The goal is not to win an argument but to work with other delegates to write a resolution: a document that proposes real solutions to a global problem. Listening carefully and compromising are just as important as speaking well.',
+      questions: [
+        { q: 'Who does a delegate represent at MUN?', choices: ['Themselves', 'Their school', 'A country', 'Their family'], answer: 2 },
+        { q: 'What should a good delegate do before speaking?', choices: ['Research their country', 'Memorise a poem', 'Draw a flag', 'Nothing'], answer: 0 },
+        { q: 'What is a resolution?', choices: ['A prize', 'A document proposing solutions', 'A country', 'A vote count'], answer: 1 },
+        { q: 'According to the passage, what is as important as speaking well?', choices: ['Listening and compromising', 'Being loudest', 'Winning', 'Dressing up'], answer: 0 },
       ],
     },
   ],

@@ -23,6 +23,8 @@ function blankProfile(kid, createdDate) {
     activeDates: [], // distinct YYYY-MM-DD the kid has used the app
     timeByDate: {}, // { 'YYYY-MM-DD': secondsSpent }
     completedByDate: {}, // { 'YYYY-MM-DD': [activityId, ...] }
+    levels: {}, // { topicId: adaptiveLevel 1..5 }
+    seen: {}, // { topicId: [ { id, date } ] } — recently served items
     log: [], // recent activity results, newest last
     tests: [], // Friday test history
     redemptions: [], // PS5 redemption history
