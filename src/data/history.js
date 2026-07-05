@@ -1,0 +1,31 @@
+// World history quiz questions. answer = index into choices.
+export const history = {
+  junior: [
+    { id: 'his-j1', q: 'People who study very old bones of dinosaurs are called…', choices: ['Chefs', 'Paleontologists', 'Pilots', 'Farmers'], answer: 1 },
+    { id: 'his-j2', q: 'Long ago, people wrote on walls of caves using…', choices: ['Crayons', 'Paint and drawings', 'Computers', 'Pens'], answer: 1 },
+    { id: 'his-j3', q: 'The big stone triangles built long ago in Egypt are called…', choices: ['Pyramids', 'Castles', 'Towers', 'Tents'], answer: 0 },
+    { id: 'his-j4', q: 'Before cars, people often travelled using…', choices: ['Airplanes', 'Horses', 'Trains only', 'Rockets'], answer: 1 },
+    { id: 'his-j5', q: 'Knights long ago lived in big stone…', choices: ['Castles', 'Huts', 'Boats', 'Caves'], answer: 0 },
+    { id: 'his-j6', q: 'What did people use before electric lights?', choices: ['Candles', 'Phones', 'TVs', 'Fridges'], answer: 0 },
+    { id: 'his-j7', q: 'A very old story passed down by grandparents is called a…', choices: ['Recipe', 'Legend', 'List', 'Bill'], answer: 1 },
+    { id: 'his-j8', q: 'Explorers long ago crossed the ocean in…', choices: ['Sailing ships', 'Cars', 'Buses', 'Planes'], answer: 0 },
+    { id: 'his-j9', q: 'What do we call the study of the past?', choices: ['Science', 'History', 'Cooking', 'Music'], answer: 1 },
+    { id: 'his-j10', q: 'People in ancient times told time using the…', choices: ['Sun', 'Phone', 'Radio', 'Oven'], answer: 0 },
+  ],
+  senior: [
+    { id: 'his-s1', q: 'The ancient pyramids of Giza were built by the…', choices: ['Romans', 'Egyptians', 'Greeks', 'Aztecs'], answer: 1 },
+    { id: 'his-s2', q: 'Who was the first person to walk on the Moon?', choices: ['Buzz Aldrin', 'Yuri Gagarin', 'Neil Armstrong', 'Michael Collins'], answer: 2 },
+    { id: 'his-s3', q: 'The Great Wall was built to protect which country?', choices: ['Japan', 'India', 'China', 'Korea'], answer: 2 },
+    { id: 'his-s4', q: 'Which ancient civilization is famous for democracy and philosophers?', choices: ['Ancient Greece', 'Ancient Egypt', 'The Maya', 'The Vikings'], answer: 0 },
+    { id: 'his-s5', q: 'The Roman Empire’s capital city was…', choices: ['Athens', 'Rome', 'Cairo', 'Istanbul'], answer: 1 },
+    { id: 'his-s6', q: 'Who was famous for saying he had a dream of equality, in 1963?', choices: ['Nelson Mandela', 'Martin Luther King Jr.', 'Gandhi', 'Lincoln'], answer: 1 },
+    { id: 'his-s7', q: 'The Second World War ended in which year?', choices: ['1918', '1939', '1945', '1963'], answer: 2 },
+    { id: 'his-s8', q: 'Mahatma Gandhi led a peaceful movement for independence in…', choices: ['China', 'India', 'Egypt', 'Kenya'], answer: 1 },
+    { id: 'his-s9', q: 'The printing press, which spread books widely, was developed by…', choices: ['Edison', 'Gutenberg', 'Newton', 'Da Vinci'], answer: 1 },
+    { id: 'his-s10', q: 'The ancient Maya civilization was located in…', choices: ['Central America', 'North Africa', 'Southern Europe', 'East Asia'], answer: 0 },
+    { id: 'his-s11', q: 'Who was the British queen with the longest reign, ending in 2022?', choices: ['Victoria', 'Elizabeth I', 'Elizabeth II', 'Mary'], answer: 2 },
+    { id: 'his-s12', q: 'The Renaissance, a rebirth of art and learning, began in…', choices: ['France', 'Italy', 'England', 'Spain'], answer: 1 },
+    { id: 'his-s13', q: 'Which explorer’s 1492 voyage linked Europe to the Americas?', choices: ['Magellan', 'Columbus', 'Vasco da Gama', 'Cook'], answer: 1 },
+    { id: 'his-s14', q: 'The United Nations was founded in which year, after WWII?', choices: ['1919', '1945', '1955', '1969'], answer: 1 },
+  ],
+}

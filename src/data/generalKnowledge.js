@@ -1,0 +1,31 @@
+// General knowledge: sports, nations, science bits, everyday facts.
+export const generalKnowledge = {
+  junior: [
+    { id: 'gk-j1', q: 'How many players are on a soccer team on the field?', choices: ['5', '11', '20', '2'], answer: 1 },
+    { id: 'gk-j2', q: 'What colour do you get mixing blue and yellow?', choices: ['Green', 'Purple', 'Orange', 'Brown'], answer: 0 },
+    { id: 'gk-j3', q: 'How many days are in one week?', choices: ['5', '7', '10', '12'], answer: 1 },
+    { id: 'gk-j4', q: 'Which animal is known as the King of the Jungle?', choices: ['Elephant', 'Lion', 'Tiger', 'Bear'], answer: 1 },
+    { id: 'gk-j5', q: 'In basketball, you score by putting the ball in the…', choices: ['Net/hoop', 'Goal', 'Hole', 'Box'], answer: 0 },
+    { id: 'gk-j6', q: 'How many legs does a spider have?', choices: ['6', '8', '4', '10'], answer: 1 },
+    { id: 'gk-j7', q: 'What do bees make?', choices: ['Milk', 'Honey', 'Bread', 'Juice'], answer: 1 },
+    { id: 'gk-j8', q: 'Which sport uses a racket and a small yellow ball?', choices: ['Tennis', 'Golf', 'Hockey', 'Rugby'], answer: 0 },
+    { id: 'gk-j9', q: 'What planet do we live on?', choices: ['Mars', 'Earth', 'Venus', 'Jupiter'], answer: 1 },
+    { id: 'gk-j10', q: 'How many colours are in a rainbow?', choices: ['5', '7', '3', '10'], answer: 1 },
+  ],
+  senior: [
+    { id: 'gk-s1', q: 'How often are the Summer Olympic Games held?', choices: ['Every year', 'Every 2 years', 'Every 4 years', 'Every 6 years'], answer: 2 },
+    { id: 'gk-s2', q: 'In which sport would you perform a “slam dunk”?', choices: ['Soccer', 'Basketball', 'Cricket', 'Tennis'], answer: 1 },
+    { id: 'gk-s3', q: 'Which country has won the most FIFA World Cup titles (men’s)?', choices: ['Germany', 'Argentina', 'Brazil', 'Italy'], answer: 2 },
+    { id: 'gk-s4', q: 'What currency is used in Japan?', choices: ['Won', 'Yuan', 'Yen', 'Rupee'], answer: 2 },
+    { id: 'gk-s5', q: 'How many players are on a cricket team?', choices: ['9', '11', '7', '15'], answer: 1 },
+    { id: 'gk-s6', q: 'The Olympic flag has how many interlocking rings?', choices: ['4', '5', '6', '7'], answer: 1 },
+    { id: 'gk-s7', q: 'Which planet is known as the Red Planet?', choices: ['Venus', 'Jupiter', 'Mars', 'Mercury'], answer: 2 },
+    { id: 'gk-s8', q: 'What language is most widely spoken as a first language?', choices: ['English', 'Hindi', 'Mandarin Chinese', 'Spanish'], answer: 2 },
+    { id: 'gk-s9', q: 'In tennis, a score of zero is called…', choices: ['Nil', 'Love', 'Duck', 'Blank'], answer: 1 },
+    { id: 'gk-s10', q: 'Which gas do plants take in that people breathe out?', choices: ['Oxygen', 'Carbon dioxide', 'Nitrogen', 'Helium'], answer: 1 },
+    { id: 'gk-s11', q: 'The Tour de France is a famous race in which sport?', choices: ['Running', 'Swimming', 'Cycling', 'Sailing'], answer: 2 },
+    { id: 'gk-s12', q: 'Which nation is home to the kangaroo?', choices: ['Brazil', 'Australia', 'South Africa', 'India'], answer: 1 },
+    { id: 'gk-s13', q: 'How many continents are there on Earth?', choices: ['5', '6', '7', '8'], answer: 2 },
+    { id: 'gk-s14', q: 'What is the hardest natural substance on Earth?', choices: ['Gold', 'Iron', 'Diamond', 'Granite'], answer: 2 },
+  ],
+}

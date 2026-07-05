@@ -1,0 +1,29 @@
+// Points ⇄ PS5 economy. Confirmed with the parent:
+//   100 points = 30 minutes of PS5.  (=> lifetime PS5 hours = points / 200)
+export const PS5 = {
+  pointsPerBlock: 100, // points needed for one block
+  blockMinutes: 30, // minutes granted per block
+}
+
+// Daily engagement goal (seconds). Kids should spend at least this long/day.
+export const DAILY_GOAL_SECONDS = 60 * 60 // 1 hour
+
+// How many PS5 minutes a given number of points is worth.
+export function pointsToMinutes(points) {
+  return (points / PS5.pointsPerBlock) * PS5.blockMinutes
+}
+
+// Human-friendly "X hr Y min" for a points balance.
+export function pointsToPS5Label(points) {
+  const totalMin = Math.floor(pointsToMinutes(points))
+  const h = Math.floor(totalMin / 60)
+  const m = totalMin % 60
+  if (h > 0 && m > 0) return `${h} hr ${m} min`
+  if (h > 0) return `${h} hr`
+  return `${m} min`
+}
+
+// How many whole 30-min blocks a spendable balance can buy right now.
+export function affordableBlocks(spendablePoints) {
+  return Math.floor(spendablePoints / PS5.pointsPerBlock)
+}

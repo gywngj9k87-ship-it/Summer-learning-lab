@@ -1,0 +1,22 @@
+# Netlify configuration.
+# - Builds the Vite app to dist/
+# - Serves serverless functions from netlify/functions/
+# - Maps /api/* to those functions (used for cross-device sync)
+# - SPA fallback so client routing always resolves to index.html
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+# Sync API -> functions (e.g. /api/state -> functions/state)
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Single-page-app fallback (must come after the /api rule)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
