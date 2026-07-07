@@ -92,13 +92,25 @@ export default function ActivityRunner({ topicId, onDone }) {
         : result.levelChange === 'down'
           ? '🔽 We’ll make the next one a bit easier.'
           : '➡️ Difficulty stays the same next time.'
+    const headline = result.practice
+      ? '✅ Nice practice!'
+      : `+${result.pointsAwarded} points!`
     return (
       <div className="activity result-screen">
-        <div className="result-emoji">🏅</div>
-        <h2>+{result.pointsAwarded} points!</h2>
+        <div className="result-emoji">{result.practice ? '💪' : '🏅'}</div>
+        <h2>{headline}</h2>
         <p className="muted">
           {topic.label} — {result.correct}/{result.total} correct
         </p>
+        {result.practice && (
+          <p className="note">You already did this one today, so this round is just practice — no extra PS5 time. Great for learning though!</p>
+        )}
+        {!result.practice && result.pending && (
+          <p className="note">🔒 These points are waiting — reach your <b>1-hour</b> learning goal today to unlock them for PS5.</p>
+        )}
+        {!result.practice && result.capped && (
+          <p className="note">🎮 You’ve hit today’s PS5 cap — extra points still boost your lifetime score.</p>
+        )}
         <p className="level-change">{changeMsg}</p>
         <button className="btn primary big" onClick={onDone}>Back to Today</button>
       </div>

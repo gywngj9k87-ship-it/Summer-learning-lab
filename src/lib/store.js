@@ -18,11 +18,13 @@ function blankProfile(kid, createdDate) {
     name: kid.name,
     age: kid.age,
     createdDate,
-    lifetimePoints: 0, // only ever grows — the achievement badge
-    spendablePoints: 0, // drops when PS5 time is redeemed
+    lifetimePoints: 0, // only ever grows — the achievement badge/score
+    spendablePoints: 0, // redeemable balance; drops when PS5 time is redeemed
     activeDates: [], // distinct YYYY-MM-DD the kid has used the app
     timeByDate: {}, // { 'YYYY-MM-DD': secondsSpent }
     completedByDate: {}, // { 'YYYY-MM-DD': [activityId, ...] }
+    dailyEarned: {}, // { 'YYYY-MM-DD': PS5 points credited today (for the cap) }
+    pendingByDate: {}, // { 'YYYY-MM-DD': PS5 points awaiting the 1-hour unlock }
     levels: {}, // { topicId: adaptiveLevel 1..5 }
     seen: {}, // { topicId: [ { id, date } ] } — recently served items
     log: [], // recent activity results, newest last

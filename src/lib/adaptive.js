@@ -12,7 +12,9 @@ import { makeRng } from './sudoku.js'
 
 export const MIN_LEVEL = 1
 export const MAX_LEVEL = 5
-export const START_LEVEL = 2
+// Start at "Medium" rather than "Easy" — kids were acing the easy tier
+// instantly. It still adapts down quickly if that's too hard.
+export const START_LEVEL = 3
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v))
 

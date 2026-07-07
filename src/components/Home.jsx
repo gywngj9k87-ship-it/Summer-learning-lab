@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext.jsx'
 import { buildDailyPlan } from '../data/topics.js'
 import { getLevel, levelLabel } from '../lib/adaptive.js'
 import { todayKey, isFriday } from '../lib/days.js'
-import { pointsToPS5Label, DAILY_GOAL_SECONDS } from '../lib/points.js'
+import { pointsToPS5Label, DAILY_GOAL_SECONDS, DAILY_PS5_CAP_POINTS } from '../lib/points.js'
 import RedeemPS5 from './RedeemPS5.jsx'
 
 function mmss(totalSec) {
@@ -27,6 +27,9 @@ export default function Home({ onOpenActivity, onOpenTest, onOpenParent }) {
   const goalMet = todaySeconds >= DAILY_GOAL_SECONDS
   const friday = isFriday()
 
+  const earnedToday = profile.dailyEarned?.[today] || 0
+  const pendingToday = profile.pendingByDate?.[today] || 0
+
   return (
     <div className="home">
       <header className="topbar" style={{ '--kid': kid.color }}>
@@ -43,24 +46,30 @@ export default function Home({ onOpenActivity, onOpenTest, onOpenParent }) {
         </div>
       </header>
 
-      {/* Landing stats: lifetime points and the PS5 time they're worth. */}
+      {/* Landing stats: lifetime score, redeemable PS5, and today's progress. */}
       <section className="stats">
         <div className="stat big-stat">
-          <div className="stat-label">Lifetime points</div>
+          <div className="stat-label">Lifetime score</div>
           <div className="stat-value">{profile.lifetimePoints || 0}</div>
-          <div className="stat-sub">🎮 = {pointsToPS5Label(profile.lifetimePoints || 0)} of PS5 earned all-time</div>
+          <div className="stat-sub">🎮 {pointsToPS5Label(profile.lifetimePoints || 0)} of PS5 earned all-time</div>
         </div>
         <div className="stat">
-          <div className="stat-label">Spendable now</div>
-          <div className="stat-value">{profile.spendablePoints || 0}</div>
-          <div className="stat-sub">🎮 {pointsToPS5Label(profile.spendablePoints || 0)} ready</div>
+          <div className="stat-label">PS5 ready to redeem</div>
+          <div className="stat-value">{pointsToPS5Label(profile.spendablePoints || 0)}</div>
+          <div className="stat-sub">{profile.spendablePoints || 0} points spendable</div>
           <button className="btn primary sm" onClick={() => setShowRedeem(true)}>Redeem PS5</button>
         </div>
         <div className="stat">
-          <div className="stat-label">Today’s learning time</div>
+          <div className="stat-label">Today’s progress</div>
           <div className="stat-value">{mmss(todaySeconds)}</div>
           <div className="goal-bar"><div className="goal-fill" style={{ width: `${goalPct}%` }} /></div>
-          <div className="stat-sub">{goalMet ? '✅ 1-hour goal reached!' : `Goal: 1 hour (${goalPct}%)`}</div>
+          <div className="stat-sub">
+            {goalMet ? '✅ 1-hour goal reached' : `Learn 1 hour to unlock PS5 (${goalPct}%)`}
+          </div>
+          <div className="stat-sub">
+            🎮 Earned today: {pointsToPS5Label(earnedToday)} / {pointsToPS5Label(DAILY_PS5_CAP_POINTS)} cap
+            {pendingToday > 0 && !goalMet ? ` · 🔒 ${pointsToPS5Label(pendingToday)} locked` : ''}
+          </div>
         </div>
       </section>
 
@@ -94,7 +103,7 @@ export default function Home({ onOpenActivity, onOpenTest, onOpenParent }) {
             )
           })}
         </div>
-        <p className="replay-hint muted">Finished one? You can replay any card for more points — it gets harder as you improve.</p>
+        <p className="replay-hint muted">Points count once per activity each day. Replays are free extra practice (fresh questions, no extra PS5) — and they help you spend your full learning hour.</p>
       </section>
 
       {showRedeem && <RedeemPS5 onClose={() => setShowRedeem(false)} />}

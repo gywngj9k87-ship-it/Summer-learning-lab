@@ -5,6 +5,8 @@ import { matchKid, getKid } from '../lib/profiles.js'
 import { loadAll, persistProfile, persistSettings, blankProfile } from '../lib/store.js'
 import { todayKey, dayNumberFor, daysAgoKey } from '../lib/days.js'
 import { getLevel, nextLevel } from '../lib/adaptive.js'
+import { DAILY_GOAL_SECONDS, DAILY_PS5_CAP_POINTS } from '../lib/points.js'
+import { computeCredit } from '../lib/economy.js'
 
 const Ctx = createContext(null)
 export const useApp = () => useContext(Ctx)
@@ -65,8 +67,16 @@ export function AppProvider({ children }) {
         const p = prev[currentKey]
         if (!p) return prev
         const timeByDate = { ...(p.timeByDate || {}) }
-        timeByDate[today] = (timeByDate[today] || 0) + add
-        const updated = { ...p, timeByDate }
+        const before = timeByDate[today] || 0
+        const afterSec = before + add
+        timeByDate[today] = afterSec
+        let updated = { ...p, timeByDate }
+        // Crossing the 1-hour goal unlocks the day's pending PS5 points.
+        const pending = p.pendingByDate?.[today] || 0
+        if (before < DAILY_GOAL_SECONDS && afterSec >= DAILY_GOAL_SECONDS && pending > 0) {
+          updated.spendablePoints = (p.spendablePoints || 0) + pending
+          updated.pendingByDate = { ...(p.pendingByDate || {}), [today]: 0 }
+        }
         persistProfile(updated)
         return { ...prev, [currentKey]: updated }
       })
@@ -131,8 +141,15 @@ export function AppProvider({ children }) {
     [profile],
   )
 
-  // Record the result of an activity: award points, log it, mark it done for
-  // today, and adapt the topic's difficulty from this session's accuracy.
+  // Record the result of an activity and adapt the topic's difficulty.
+  //
+  // Economy (anti-farming):
+  //  - Difficulty always adapts from performance (even on replays).
+  //  - PS5-convertible points are awarded ONLY the first time an activity is
+  //    completed each day. Replays are practice: fresh questions, no PS5 credit.
+  //  - The day's PS5 points are capped (DAILY_PS5_CAP_POINTS).
+  //  - Earned PS5 points stay PENDING until the 1-hour daily learning goal is
+  //    met; only then do they unlock into the spendable balance.
   function completeActivity({ topicId, correct, total, points }) {
     if (!profile) return { pointsAwarded: 0 }
     const today = todayKey()
@@ -140,25 +157,51 @@ export function AppProvider({ children }) {
     const curLevel = getLevel(profile, topicId)
     const { next, change } = nextLevel(curLevel, accuracy)
 
-    const completedByDate = { ...(profile.completedByDate || {}) }
-    const doneToday = new Set(completedByDate[today] || [])
-    doneToday.add(topicId)
-    completedByDate[today] = [...doneToday]
+    const doneToday = new Set(profile.completedByDate?.[today] || [])
+    const firstToday = !doneToday.has(topicId)
+    const earnedToday = profile.dailyEarned?.[today] || 0
+    const timeMet = (profile.timeByDate?.[today] || 0) >= DAILY_GOAL_SECONDS
 
-    const updated = {
+    const credit = computeCredit({
+      points, firstToday, timeMet, earnedToday, cap: DAILY_PS5_CAP_POINTS,
+    })
+
+    // Practice replay: adapt difficulty only, no points/credit.
+    if (credit.practice) {
+      commitProfile({
+        ...profile,
+        levels: { ...(profile.levels || {}), [topicId]: next },
+        lastActivity: { topicId, date: today },
+      })
+      return { pointsAwarded: 0, practice: true, levelChange: change, newLevel: next }
+    }
+
+    const completedByDate = { ...(profile.completedByDate || {}) }
+    completedByDate[today] = [...doneToday, topicId]
+    const pendingByDate = { ...(profile.pendingByDate || {}) }
+    if (credit.toPending > 0) pendingByDate[today] = (pendingByDate[today] || 0) + credit.toPending
+
+    commitProfile({
       ...profile,
-      lifetimePoints: (profile.lifetimePoints || 0) + points,
-      spendablePoints: (profile.spendablePoints || 0) + points,
+      lifetimePoints: (profile.lifetimePoints || 0) + credit.lifetimeAdd,
+      spendablePoints: (profile.spendablePoints || 0) + credit.toSpendable,
       levels: { ...(profile.levels || {}), [topicId]: next },
       completedByDate,
+      dailyEarned: { ...(profile.dailyEarned || {}), [today]: earnedToday + credit.creditable },
+      pendingByDate,
       log: [
         ...(profile.log || []).slice(-49),
-        { date: today, topicId, correct, total, points, ts: dayNumber },
+        { date: today, topicId, correct, total, points: credit.creditable, ts: dayNumber },
       ],
       lastActivity: { topicId, date: today },
+    })
+    return {
+      pointsAwarded: credit.creditable,
+      pending: credit.toPending > 0,
+      capped: credit.capped,
+      levelChange: change,
+      newLevel: next,
     }
-    commitProfile(updated)
-    return { pointsAwarded: points, levelChange: change, newLevel: next }
   }
 
   // --- "Recently seen" guard: no repeats within a week -----------------------
@@ -183,17 +226,31 @@ export function AppProvider({ children }) {
     commitProfile({ ...profile, seen })
   }
 
-  // Record a Friday test result.
+  // Record a Friday test result. Bonus points obey the same daily cap and
+  // 1-hour time-gate as activities, and only the first test each day counts
+  // toward PS5 (retakes still show a score but earn no extra screen time).
   function recordTest({ score, total, points }) {
-    if (!profile) return
+    if (!profile) return { pointsAwarded: 0 }
     const today = todayKey()
-    const updated = {
+    const alreadyTestedToday = (profile.tests || []).some((t) => t.date === today)
+    const earnedToday = profile.dailyEarned?.[today] || 0
+    const creditable = alreadyTestedToday
+      ? 0
+      : Math.max(0, Math.min(points, DAILY_PS5_CAP_POINTS - earnedToday))
+    const timeMet = (profile.timeByDate?.[today] || 0) >= DAILY_GOAL_SECONDS
+
+    const pendingByDate = { ...(profile.pendingByDate || {}) }
+    if (!timeMet && creditable > 0) pendingByDate[today] = (pendingByDate[today] || 0) + creditable
+
+    commitProfile({
       ...profile,
-      lifetimePoints: (profile.lifetimePoints || 0) + points,
-      spendablePoints: (profile.spendablePoints || 0) + points,
-      tests: [...(profile.tests || []), { date: today, score, total, points }],
-    }
-    commitProfile(updated)
+      lifetimePoints: (profile.lifetimePoints || 0) + (alreadyTestedToday ? 0 : points),
+      spendablePoints: (profile.spendablePoints || 0) + (timeMet ? creditable : 0),
+      dailyEarned: { ...(profile.dailyEarned || {}), [today]: earnedToday + creditable },
+      pendingByDate,
+      tests: [...(profile.tests || []), { date: today, score, total, points: creditable }],
+    })
+    return { pointsAwarded: creditable, pending: !timeMet && creditable > 0 }
   }
 
   // --- Parent testing/reset tools (operate on any kid by key) --------------
